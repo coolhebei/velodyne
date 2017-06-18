@@ -144,7 +144,7 @@ namespace velodyne_rawdata
       * @returns 0 if successful;
       *           errno value for failure
      */
-    int setupOffline(std::string calibration_file, double max_range_, double min_range_);
+    int setupOffline(std::string calibration_file, double max_range_, double min_range_, bool gps_sync = false);
 
     void unpack(const velodyne_msgs::VelodynePacket &pkt, VPointCloud &pc);
     
@@ -182,6 +182,8 @@ namespace velodyne_rawdata
       return (range >= config_.min_range
               && range <= config_.max_range);
     }
+
+    bool has_gps_sync_;
   };
 
 } // namespace velodyne_rawdata
