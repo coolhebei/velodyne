@@ -36,7 +36,7 @@
 
 namespace velodyne_rawdata
 {
-inline uint64_t gpsTimeFromUnix(double unix_sec)
+inline double gpsTimeFromUnix(double unix_sec)
 {
     double leaps = 18; // FIXME
     double gps_time = unix_sec - (315964800 - leaps);
