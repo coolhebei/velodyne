@@ -49,7 +49,7 @@ inline double gpsTimeFromUnix(double unix_sec)
   //
   ////////////////////////////////////////////////////////////////////////
 
-  RawData::RawData() : has_gps_sync_(false) {}
+  RawData::RawData() : has_gps_sync_(true) {}
   
   /** Update parameters: conversions and update */
   void RawData::setParameters(double min_range,
@@ -384,8 +384,9 @@ double timeOffset[2][16][12]={
 
     double gps_packet_time = 0;
 
+    ROS_DEBUG_STREAM("has_gps_sync_" << has_gps_sync_);
     if (has_gps_sync_) {
-        double outer_hour = std::floor(pkt.stamp.toSec() / 3600);
+        double outer_hour = std::floor(pkt.stamp.toSec() / 3600) * 3600;
         double ros_inner_hour = std::fmod(pkt.stamp.toSec(), 3600);
         double pkt_inner_hour;
         uint32_t buffer;
@@ -401,7 +402,8 @@ double timeOffset[2][16][12]={
             ros::shutdown();
         }
         gps_packet_time = gpsTimeFromUnix(
-                static_cast<double>(outer_hour + pkt_inner_hour) / 1e6);
+                static_cast<double>(outer_hour + pkt_inner_hour));
+        ROS_DEBUG_STREAM(std::fixed << pkt_inner_hour << " " << ros_inner_hour << " " << outer_hour << " " << outer_hour + pkt_inner_hour << " " << gps_packet_time);
     }
 
                                 //blocks_per_packet = 12
