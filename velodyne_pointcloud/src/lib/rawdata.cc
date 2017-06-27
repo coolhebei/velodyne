@@ -396,7 +396,7 @@ double timeOffset[2][16][12]={
             outer_hour += 3600;
         else if (pkt_inner_hour > ros_inner_hour + 3600 - 5)
             outer_hour -= 3600;
-        else if (std::abs(ros_inner_hour - pkt_inner_hour) > 1) {
+        else if (std::abs(ros_inner_hour - pkt_inner_hour) > 5) {
             ROS_FATAL("VelodynePacket stamp inconsistent with receive time."
                     " (%f, %f).\n", ros_inner_hour, pkt_inner_hour);
             ros::shutdown();
@@ -578,6 +578,11 @@ double timeOffset[2][16][12]={
               
               pc.points.push_back(point);
               ++pc.width;
+              if (pc.size() == 1)
+              {
+                  pc.header.stamp = static_cast<uint64_t>(point.timestamp * 1e6);
+                  std::cerr << "pc.header.stamp = " << pc.header.stamp << std::endl;
+              }
             }
           }
         }
