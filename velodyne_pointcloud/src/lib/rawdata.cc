@@ -49,7 +49,7 @@ inline double gpsTimeFromUnix(double unix_sec)
   //
   ////////////////////////////////////////////////////////////////////////
 
-  RawData::RawData() : has_gps_sync_(true) {}
+  RawData::RawData() : has_gps_sync_(false) {}
   
   /** Update parameters: conversions and update */
   void RawData::setParameters(double min_range,
@@ -102,7 +102,7 @@ inline double gpsTimeFromUnix(double unix_sec)
       return -1;
     }
 
-    private_nh.getParam("gps_sync", has_gps_sync_);
+    private_nh.getParam("has_gps_sync", has_gps_sync_);
     ROS_INFO_STREAM("has GPS sync: " << has_gps_sync_);
     
     ROS_INFO_STREAM("Number of lasers: " << calibration_.num_lasers << ".");
@@ -399,7 +399,7 @@ double timeOffset[2][16][12]={
         else if (std::abs(ros_inner_hour - pkt_inner_hour) > 5) {
             ROS_FATAL("VelodynePacket stamp inconsistent with receive time."
                     " (%f, %f).\n", ros_inner_hour, pkt_inner_hour);
-            ros::shutdown();
+            // ros::shutdown();
         }
         gps_packet_time = gpsTimeFromUnix(
                 static_cast<double>(outer_hour + pkt_inner_hour));
@@ -578,11 +578,6 @@ double timeOffset[2][16][12]={
               
               pc.points.push_back(point);
               ++pc.width;
-              if (pc.size() == 1)
-              {
-                  pc.header.stamp = static_cast<uint64_t>(point.timestamp * 1e6);
-                  std::cerr << "pc.header.stamp = " << pc.header.stamp << std::endl;
-              }
             }
           }
         }
