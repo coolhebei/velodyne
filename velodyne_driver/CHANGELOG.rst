@@ -1,6 +1,37 @@
 Change history
 ==============
 
+Forthcoming
+-----------
+* try fixing changelog
+* add launch args to support multiple devices (`#108 <https://github.com/prclibo/velodyne/issues/108>`_)
+* Rearranged alphabetically.
+* Add more options in launch files.
+  - rpm, device_ip, port, read_once, read_fast, repeat_delay
+* velodyne_driver/src/lib/input.cc : fix for device_ip filter
+  Fix for device_ip filter in InputSocket: initialization of devip\_ for correct ip filtering in InputSocket::getPacket.
+* velodyne_driver: credit @priyankadey for VLP-16 bug fix (`#96 <https://github.com/prclibo/velodyne/issues/96>`_)
+* updated VLP-16 packet rate from user manual.
+  Also verified with sensor. It reduced overlap in the pointcloud
+* update change history
+* fix g++ 5.3.1 compile errors (`#94 <https://github.com/prclibo/velodyne/issues/94>`_)
+* merge current master (`#94 <https://github.com/prclibo/velodyne/issues/94>`_)
+* update velodyne_driver package description to include all models
+* velodyne_driver: Add dynamic_reconfigure and time_offset correction
+  The value of time_offset is added to the calculated time stamp in live mode for each packet.
+* velodyne_driver: Make input destructors virtual
+* prepare change history for coming Indigo release (`#59 <https://github.com/prclibo/velodyne/issues/59>`_)
+* velodyne_driver: use port number for PCAP data (`#66 <https://github.com/prclibo/velodyne/issues/66>`_)
+* Merge pull request `#39 <https://github.com/prclibo/velodyne/issues/39>`_ from zooxco/multivelodyne
+  support for multiple velodynes
+* adding the VLP16 test scripts and updating the CMakeLists to include the test file from http://download.ros.org/data/velodyne/vlp16.pcap
+* adding support for the VLP16
+* parameters to set the udp port
+* fixed missing header
+* cleanup debug line
+* parameter and code added for working with multiple velodynes
+* Contributors: Andreas Wachaja, Bo Li, Brice Rebsamen, Daniel Jartoux, Denis Dillenberger, Ilya, Jack O'Quin, Matteo Murtas, Priyanka Dey, junior, phussey
+
 1.2.0 (2014-08-06)
 ------------------
 * Fixed bug in diagnostic rate for driver (`#16

@@ -1,6 +1,12 @@
 Change history
 ==============
 
+Forthcoming
+-----------
+* try fixing changelog
+* prepare change history for coming Indigo release (`#59 <https://github.com/prclibo/velodyne/issues/59>`_)
+* Contributors: Bo Li, Jack O'Quin
+
 1.2.0 (2014-08-06)
 ------------------
 

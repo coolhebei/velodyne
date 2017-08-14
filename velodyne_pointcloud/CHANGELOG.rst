@@ -1,6 +1,97 @@
 Change history
 ==============
 
+Forthcoming
+-----------
+* try fixing changelog
+* update
+* point cloud header stamp from gps
+* fixed outer hour denotion
+* workaround version number
+* fixed bug gps time from uint64_t to double
+* timestamp support initialized
+* velodyne_pointcloud: remove incorrect catkin_package() DEPENDS option (`#93 <https://github.com/prclibo/velodyne/issues/93>`_)
+  This eliminates a CMake warning when building on Xenial.
+* Added an interface to set up raw data processing from a locally defined calibration file. This method is useful when processing data offline from a bag file, without starting any ros master
+* test multiple nodelet manager support (`#108 <https://github.com/prclibo/velodyne/issues/108>`_)
+* add launch args to support multiple devices (`#108 <https://github.com/prclibo/velodyne/issues/108>`_)
+* Rearranged alphabetically.
+* Remove unused constants.
+  DISTANCE_MAX and DISTANCE_MAX_UNITS are not used anywhere in the code.
+  Furthermore, using them would lead to errors as both VLP-64 manuals state that returns above 120 m should not be used. The VLP-32 manual allows 70 m as the maximum valid sensor range.
+* Add more options in launch files.
+  - rpm, device_ip, port, read_once, read_fast, repeat_delay
+* Fix misleading typecasts.
+  intensity and VPoint::intensity are both of type float.
+* update change history
+* Modified velodyne_point_cloud/src/lib/rawdata.cc to address warning
+  that last_azimuth_diff variable may be used uninitialized.  Variable
+  is now initialized to 0 at creation.
+  velodyne/velodyne_pointcloud/src/lib/rawdata.cc:328:57: error: ‘last_azimuth_diff’ may be used uninitialized in this function [-Werror=maybe-uninitialized]
+  azimuth_corrected_f = azimuth + (azimuth_diff * ((dsr*VLP16_DSR_TOFFSET) + (firing*VLP16_FIRING_TOFFSET)) / VLP16_BLOCK_TDURATION);
+* Modified  velodyne_pointcloud/src/conversion/colors.cc to remove
+  address build warning for strict-aliasing.
+  velodyne/velodyne_pointcloud/src/conversions/colors.cc:84:58:
+  error: dereferencing type-punned pointer will break strict-aliasing rules [-Werror=strict-aliasing]
+  p.rgb = *reinterpret_cast<float*>(&rainbow[color]);
+  ^
+* velodyne_pointcloud: Fix compile warning "Wrong initialization order"
+* velodyne_pointcloud: add dynamic reconfig update to change log (`#78 <https://github.com/prclibo/velodyne/issues/78>`_)
+* velodyne_pointcloud: use recommended add_dependencies() CMake variable `#78 <https://github.com/prclibo/velodyne/issues/78>`_
+* velodyne_pointcloud: fix transform unit tests
+  Use tf2_ros static_transform_publisher for more consistent timing (`#2 <https://github.com/prclibo/velodyne/issues/2>`_)
+* Merge branch 'reconfigure_transform_node' of https://github.com/fudger/velodyne
+* prepare change history for coming Indigo release (`#59 <https://github.com/prclibo/velodyne/issues/59>`_)
+* calibration: unit test case improvements (`#84 <https://github.com/prclibo/velodyne/issues/84>`_)
+* calibration: read all intensities as float, then convert (`#84 <https://github.com/prclibo/velodyne/issues/84>`_)
+* calibration: add gtest for `#84 <https://github.com/prclibo/velodyne/issues/84>`_
+  This currently fails on 64e_s2.1-sztaki.yaml and on issue_84_float_intensities.yaml.
+* calibration: make max_intensity and min_intensity optional (`#84 <https://github.com/prclibo/velodyne/issues/84>`_)
+  This fixes a regression in the 32e and VLP-16 calibrations which do not contain
+  intensity values. There is still a problem with the 64e_s2.1 calibration.
+* Merge pull request `#76 <https://github.com/prclibo/velodyne/issues/76>`_ from pomerlef/master
+  Sign inversion in some equations
+* fix the yaml-cpp 0.5 code paths
+* allow horiz_offset_correction to be optional with 0 as default
+* allow floats instead of ints in min/max_intensity
+* Resolve frame ID name using tf prefix.
+* Improve coding style.
+* Set up dynamic reconfiguration for transform_node.
+  Previously, transform_node has neither read parameters other than frame_id from the command line nor has it exposed these parameters via dynamic reconfigure. As parameters like max_range and view_width have been initialized to zero, the inconfigurable transform_node has returned an empty point cloud.
+  Now, transform_node launches an reconfigure server just as cloud_node. In contrast to cloud_node, transform node exposes another parameter for dynamic reconfiguration: frame_id, i.e. the frame of reference the incoming Velodyne points are transformed to.
+* Add a missing space.
+* Fix line that always indicates use of model VLP-16.
+* Align console output of calibration data.
+* Merge branch 'master' of https://github.com/ros-drivers/velodyne
+* resolve sign error
+* Fix data type error that distorts the point cloud.
+* Fix and add a few comments.
+* Remove unused variable
+  I think that `dsr` was unused. See line 317:
+  for (int dsr=0; ...
+* VLP-16: skip badly formatted data packets (`#62 <https://github.com/prclibo/velodyne/issues/62>`_, `#63 <https://github.com/prclibo/velodyne/issues/63>`_)
+* restore VLP-16 min_range setting to 0.4 (`#60 <https://github.com/prclibo/velodyne/issues/60>`_)
+  NOTE: There is still some other problem keeping that from working.
+* permit min_range settings below 0.9 meters (`#60 <https://github.com/prclibo/velodyne/issues/60>`_)
+  No known models are currently known to return closer measurements.
+* Fixed azimuth overflow bug.
+  For interpolated azimuth values between 35999.5 and 36000.0 the nested round(fmod())
+  yields a value of 36000 which is invalid and overflows the pre-computed sin/cos arrays,
+  since they only go form 0..35999
+* Added vertical sin angle correction
+* Merge pull request `#47 <https://github.com/prclibo/velodyne/issues/47>`_ from prclibo/master
+  fixed rounding bug in intensity calculation found by songshiyu
+* fixed rounding bug in intensity calculation found by songshiyu
+* fix some overly long C++ source lines
+* missed the space in the file name which caused the build to fail, removed space before extension
+* adding the VLP16 test scripts and updating the CMakeLists to include the test file from http://download.ros.org/data/velodyne/vlp16.pcap
+* adding support for the VLP16
+* fixed point computation according to the 64e_s2(.1) velodyne manual, with luopei"s help
+* fixed gen_calibration min/max intensity type
+* fixed a calibration file parsing bug
+* Fix broken reference to pull request `#22 <https://github.com/prclibo/velodyne/issues/22>`_
+* Contributors: Adam Stambler, Alex Rodrigues, Alexander Schaefer, Andreas Wachaja, Bo Li, Daniel Jartoux, Jack O'Quin, Jose Luis Blanco-Claraco, Kun Li, Todor Stoyanov, William Woodall, libo24, phussey, pomerlef
+
 1.2.0 (2014-08-06)
 ------------------
 
