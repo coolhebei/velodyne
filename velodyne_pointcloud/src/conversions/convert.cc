@@ -72,6 +72,8 @@ namespace velodyne_pointcloud
         data_->unpack(scanMsg->packets[i], *outMsg);
       }
 
+    // FIXME Let's change stamp to the stamp of the first point
+
     // publish the accumulated cloud message
     ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
                      << " Velodyne points, time: " << outMsg->header.stamp);
