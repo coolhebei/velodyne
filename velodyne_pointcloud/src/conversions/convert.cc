@@ -73,6 +73,9 @@ namespace velodyne_pointcloud
       }
 
     // FIXME Let's change stamp to the stamp of the first point
+    if (outMsg->empty()) return;
+    outMsg->header.stamp =
+        static_cast<uint64_t>(outMsg->front().timestamp * 1e6);
 
     // publish the accumulated cloud message
     ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width

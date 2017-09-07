@@ -366,12 +366,6 @@ double timeOffset[2][16][12]={
   void RawData::unpack_vlp16(const velodyne_msgs::VelodynePacket &pkt,
                              VPointCloud &pc)
   {
-    //msg stamp
-    ROS_INFO("Received packet, time in unpack_vlp16:%f ", pkt.stamp.toSec());//double 
-    //uint64_t timeNSec;
-    //timeNSec = pkt.stamp.toNSec();
-    //ROS_INFO("timeNSec:%ld", timeNSec);
-
     float azimuth;
     float azimuth_diff;
     float last_azimuth_diff=0;
@@ -382,7 +376,8 @@ double timeOffset[2][16][12]={
 
     const raw_packet_t *raw = (const raw_packet_t *) &pkt.data[0];
 
-    double gps_packet_time = 0;
+    // double gps_packet_time = 0;
+    double ros_packet_time = 0;
 
     ROS_DEBUG_STREAM("has_gps_sync_" << has_gps_sync_);
     if (has_gps_sync_) {
@@ -401,9 +396,10 @@ double timeOffset[2][16][12]={
                     " (%f, %f).\n", ros_inner_hour, pkt_inner_hour);
             // ros::shutdown();
         }
-        gps_packet_time = gpsTimeFromUnix(
-                static_cast<double>(outer_hour + pkt_inner_hour));
-        ROS_DEBUG_STREAM(std::fixed << pkt_inner_hour << " " << ros_inner_hour << " " << outer_hour << " " << outer_hour + pkt_inner_hour << " " << gps_packet_time);
+        ros_packet_time = outer_hour + pkt_inner_hour;
+        // gps_packet_time = gpsTimeFromUnix(static_cast<double>(outer_hour + pkt_inner_hour));
+
+        ROS_DEBUG_STREAM(std::fixed << pkt_inner_hour << " " << ros_inner_hour << " " << outer_hour << " " << outer_hour + pkt_inner_hour << " " << ros_packet_time);
     }
 
                                 //blocks_per_packet = 12
@@ -573,7 +569,8 @@ double timeOffset[2][16][12]={
               point.intensity = intensity;
               
               //out of hour + inner hour + timeoffset;
-              point.timestamp = gps_packet_time + timeOffset[firing][dsr][block]/1000000.0; // 
+              // point.timestamp = gps_packet_time + timeOffset[firing][dsr][block]/1000000.0; // 
+              point.timestamp = ros_packet_time + timeOffset[firing][dsr][block]/1000000.0;
               // ROS_INFO("point.timestamp[%d][%d][%d]:%f", firing,dsr,block,point.timestamp);
               
               pc.points.push_back(point);
