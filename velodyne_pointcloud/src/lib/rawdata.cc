@@ -36,12 +36,6 @@
 
 namespace velodyne_rawdata
 {
-inline double gpsTimeFromUnix(double unix_sec)
-{
-    double leaps = 18; // FIXME
-    double gps_time = unix_sec - (315964800 - leaps);
-    return gps_time > 0 ? gps_time : 0;
-}
 
   ////////////////////////////////////////////////////////////////////////
   //
@@ -310,8 +304,9 @@ inline double gpsTimeFromUnix(double unix_sec)
             point.intensity = intensity;
   
             // append this point to the cloud
-            pc.points.push_back(point);
-            ++pc.width;
+            // pc.points.push_back(point);
+            // ++pc.width;
+            pc.push_back(point);
           }
         }
       }
@@ -573,8 +568,9 @@ double timeOffset[2][16][12]={
               point.timestamp = ros_packet_time + timeOffset[firing][dsr][block]/1000000.0;
               // ROS_INFO("point.timestamp[%d][%d][%d]:%f", firing,dsr,block,point.timestamp);
               
-              pc.points.push_back(point);
-              ++pc.width;
+              pc.push_back(point);
+              // pc.points.push_back(point);
+              // ++pc.width;
             }
           }
         }
