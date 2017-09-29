@@ -1,8 +1,8 @@
 Change history
 ==============
 
-Forthcoming
------------
+101.2.1 (2017-09-29)
+--------------------
 * try fixing changelog
 * add launch args to support multiple devices (`#108 <https://github.com/prclibo/velodyne/issues/108>`_)
 * Rearranged alphabetically.

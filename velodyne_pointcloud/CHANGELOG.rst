@@ -1,8 +1,8 @@
 Change history
 ==============
 
-Forthcoming
------------
+101.2.1 (2017-09-29)
+--------------------
 * try fixing changelog
 * update
 * point cloud header stamp from gps
