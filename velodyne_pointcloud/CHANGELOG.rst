@@ -1,6 +1,11 @@
 Change history
 ==============
 
+Forthcoming
+-----------
+* add has_gps_sync as launch param
+* Contributors: Bo Li
+
 101.2.1 (2017-09-29)
 --------------------
 * try fixing changelog
