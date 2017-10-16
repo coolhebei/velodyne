@@ -3,6 +3,7 @@
 
 <launch>
   <arg name="calibration" default="" />
+  <arg name="has_gps_sync" default="False" />
   <arg name="manager" default="velodyne_nodelet_manager" />
   <arg name="max_range" default="130.0" />
   <arg name="min_range" default="0.9" />
@@ -10,6 +11,7 @@
   <node pkg="nodelet" type="nodelet" name="$(arg manager)_cloud"
         args="load velodyne_pointcloud/CloudNodelet $(arg manager)" output="screen">
     <param name="calibration" value="$(arg calibration)"/>
+    <param name="has_gps_sync" value="$(arg has_gps_sync)"/>
     <param name="max_range" value="$(arg max_range)"/>
     <param name="min_range" value="$(arg min_range)"/>
   </node>
