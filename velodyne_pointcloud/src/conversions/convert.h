@@ -48,6 +48,9 @@ namespace velodyne_pointcloud
     ros::Subscriber velodyne_scan_;
     ros::Publisher output_;
 
+    velodyne_rawdata::VPointCloud out_msg_;
+    float prev_min_angle_;
+
     /// configuration parameters
     typedef struct {
       int npackets;                    ///< number of packets to combine

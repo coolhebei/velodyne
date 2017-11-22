@@ -58,29 +58,34 @@ namespace velodyne_pointcloud
     if (output_.getNumSubscribers() == 0)         // no one listening?
       return;                                     // avoid much work
 
-    // allocate a point cloud with same time and frame ID as raw data
-    velodyne_rawdata::VPointCloud::Ptr
-      outMsg(new velodyne_rawdata::VPointCloud());
-    // outMsg's header is a pcl::PCLHeader, convert it before stamp assignment
-    outMsg->header.stamp = pcl_conversions::toPCL(scanMsg->header).stamp;
-    outMsg->header.frame_id = scanMsg->header.frame_id;
-    outMsg->height = 1;
-
     // process each packet provided by the driver
     for (size_t i = 0; i < scanMsg->packets.size(); ++i)
+    {
+      velodyne_rawdata::VPointCloud unpacked;
+      data_->unpack(scanMsg->packets[i], unpacked);
+      if (unpacked.empty()) continue;
+
+      std::vector<float> angles;
+      angles.reserve(unpacked.size());
+      for (size_t j = 0; j < unpacked.size(); ++j)
       {
-        data_->unpack(scanMsg->packets[i], *outMsg);
+        float angle = std::atan2(unpacked.at(j).y, unpacked.at(j).x);
+        angles.push_back(angle);
       }
+      std::sort(angles.begin(), angles.end());
 
-    // FIXME Let's change stamp to the stamp of the first point
-    if (outMsg->empty()) return;
-    outMsg->header.stamp =
-        static_cast<uint64_t>(outMsg->front().timestamp * 1e6);
-
-    // publish the accumulated cloud message
-    ROS_DEBUG_STREAM("Publishing " << outMsg->height * outMsg->width
-                     << " Velodyne points, time: " << outMsg->header.stamp);
-    output_.publish(outMsg);
+      out_msg_.insert(out_msg_.end(), unpacked.begin(), unpacked.end());
+      if (angles.front() > 0 && prev_min_angle_ <= 0)
+      {
+        out_msg_.header.stamp =
+            static_cast<uint64_t>(out_msg_.front().timestamp * 1e6);
+        out_msg_.header.frame_id = scanMsg->header.frame_id;
+        out_msg_.height = 1;
+        output_.publish(out_msg_);
+        out_msg_.clear();
+      }
+      prev_min_angle_ = angles.front();
+    }
   }
 
 } // namespace velodyne_pointcloud
