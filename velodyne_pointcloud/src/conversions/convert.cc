@@ -42,6 +42,7 @@ namespace velodyne_pointcloud
       node.subscribe("velodyne_packets", 10,
                      &Convert::processScan, (Convert *) this,
                      ros::TransportHints().tcpNoDelay(true));
+    prev_min_angle_ = M_PI;
   }
   
   void Convert::callback(velodyne_pointcloud::CloudNodeConfig &config,
@@ -74,8 +75,7 @@ namespace velodyne_pointcloud
       }
       std::sort(angles.begin(), angles.end());
 
-      out_msg_.insert(out_msg_.end(), unpacked.begin(), unpacked.end());
-      if (angles.front() > 0 && prev_min_angle_ <= 0)
+      if (angles.front() > 0 && !out_msg_.empty() && prev_min_angle_ <= 0)
       {
         out_msg_.header.stamp =
             static_cast<uint64_t>(out_msg_.front().timestamp * 1e6);
@@ -84,6 +84,7 @@ namespace velodyne_pointcloud
         output_.publish(out_msg_);
         out_msg_.clear();
       }
+      out_msg_.insert(out_msg_.end(), unpacked.begin(), unpacked.end());
       prev_min_angle_ = angles.front();
     }
   }
